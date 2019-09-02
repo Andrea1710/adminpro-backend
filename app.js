@@ -6,6 +6,17 @@ const bodyParser = require('body-parser');
 // Variables initialization
 const app = express();
 
+// CORS
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+  next();
+});
+
 // Body Parser
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -29,11 +40,6 @@ mongoose.connection.openUri(
     console.log('Database: \x1b[36m%s\x1b[0m', 'connected');
   }
 );
-
-// Server Index Config
-// const serveIndex = require('serve-index');
-// app.use(express.static(__dirname + '/'))
-// app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
 // Routes
 app.use('/usuario', usuarioRoutes);

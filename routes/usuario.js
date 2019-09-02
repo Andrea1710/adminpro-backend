@@ -79,7 +79,7 @@ app.put('/:id', mdAutentication.verificaToken, (req, res, next) => {
 });
 
 // Crear un nuevo Usuario
-app.post('/', mdAutentication.verificaToken, (req, res, next) => {
+app.post('/', (req, res, next) => {
   const {nombre, email, password, img, role} = req.body;
 
   const encryptedPassword = bcrypt.hashSync(password, 10);
