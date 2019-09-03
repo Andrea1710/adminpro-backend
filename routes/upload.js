@@ -139,7 +139,7 @@ const subirPorTipo = (tipo, id, nombreArchivo, res) => {
         return res.status(200).json({
           ok: true,
           mensaje: 'Image de Medico actualizada',
-          medicoActualizado: medicoActualizado,
+          medico: medicoActualizado,
         });
       });
     });
@@ -176,7 +176,7 @@ const subirPorTipo = (tipo, id, nombreArchivo, res) => {
         return res.status(200).json({
           ok: true,
           mensaje: 'Image de hospital actualizada',
-          hospitalActualizado: hospitalActualizado,
+          hospital: hospitalActualizado,
         });
       });
     });
