@@ -18,14 +18,9 @@ const client = new OAuth2Client(CLIENT_ID);
 async function verify(token) {
   const ticket = await client.verifyIdToken({
     idToken: token,
-    audience: CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
-    // Or, if multiple clients access the backend:
-    //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    audience: CLIENT_ID,
   });
   const payload = ticket.getPayload();
-  // const userid = payload['sub'];
-  // If request specified a G Suite domain:
-  //const domain = payload['hd'];
 
   return {
     nombre: payload.name,
@@ -69,6 +64,7 @@ app.post('/google', async (req, res, next) => {
           usuario: usuarioDB,
           token: token,
           id: usuarioDB._id,
+          menu: obtenerMenu(usuarioDB.role),
         });
       }
     } else {
@@ -91,6 +87,7 @@ app.post('/google', async (req, res, next) => {
           usuario: usuarioDB,
           token: token,
           id: usuarioDB._id,
+          menu: obtenerMenu(usuarioDB.role),
         });
       });
     }
@@ -140,8 +137,38 @@ app.post('/', (req, res, next) => {
       usuario: usuarioDB,
       token: token,
       id: usuarioDB._id,
+      menu: obtenerMenu(usuarioDB.role),
     });
   });
 });
+
+const obtenerMenu = role => {
+  const menu = [
+    {
+      titulo: 'Principal',
+      icono: 'mdi mdi-gauge',
+      submenu: [
+        {titulo: 'Dashboard', url: '/dashboard'},
+        {titulo: 'ProgressBar', url: '/progress'},
+        {titulo: 'Gráficas', url: '/graficas1'},
+        {titulo: 'Promesas', url: '/promesas'},
+        {titulo: 'Rxjs', url: '/rxjs'},
+      ],
+    },
+    {
+      titulo: 'Mantenimientos',
+      icono: 'mdi mdi-folder-lock-open',
+      submenu: [
+        {titulo: 'Hospitales', url: '/hospitales'},
+        {titulo: 'Médicos', url: '/medicos'},
+      ],
+    },
+  ];
+
+  if (role === 'ADMIN_ROLE')
+    menu[1].submenu.unshift({titulo: 'Usuarios', url: '/usuarios'});
+
+  return menu;
+};
 
 module.exports = app;

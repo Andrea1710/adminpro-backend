@@ -2,7 +2,11 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const app = express();
 
-const mdAutentication = require('../middlewares/autentication');
+const {
+  verificaToken,
+  verificaAdminRole,
+  verificaAdminUsuario,
+} = require('../middlewares/autentication');
 
 const Usuario = require('../models/usuario');
 
@@ -34,7 +38,7 @@ app.get('/', (req, res, next) => {
 });
 
 //Actualizar Usuario
-app.put('/:id', mdAutentication.verificaToken, (req, res, next) => {
+app.put('/:id', [verificaToken, verificaAdminUsuario], (req, res, next) => {
   const {id} = req.params;
   const {nombre, email, role} = req.body;
 
@@ -110,7 +114,7 @@ app.post('/', (req, res, next) => {
 });
 
 // Borrar un Usuario por el ID
-app.delete('/:id', mdAutentication.verificaToken, (req, res, next) => {
+app.delete('/:id', [verificaToken, verificaAdminRole], (req, res, next) => {
   const {id} = req.params;
 
   Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
